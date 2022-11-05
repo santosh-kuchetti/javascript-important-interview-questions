@@ -1,3 +1,5 @@
+const { Api } = require("@mui/icons-material");
+
 // 1 - about arguments
 function getUserId(...args) { // here we are using rest operator. IT will catch the list of elements in an array. Now args is [10]. These arguments are arrays but not the actual arrays. All functions are not allowed for it such as push, pop etc,. length property is there we can use for this args array 
     console.log(typeof args); // typeof [10]. typeof array in javascript is 'object'.
@@ -57,7 +59,7 @@ var myObject = {
 myObject.func();
 
 
-// 4 - about 
+// 4 - about var and let
 for (var i = 0; i < 5; i++){   // we are having a for loop where we are looping through this for loop for 5 times
     var btn = document.createElement('button');  // we are creating the button
     btn.appendChild(document.createTextNode('Button ' + i));  // we create the button with the text "Button" and "i" value
@@ -84,5 +86,146 @@ for (var i = 0; i < 5; i++){   // we are having a for loop where we are looping 
     on clicking Button 2, we will get 2 in the console.
     on clicking Button 3, we will get 3 in the console.
     on clicking Button 4, we will get 4 in the console.
+
+*/
+
+
+
+// CALLBACKS
+
+/*
+    callbacks are super usefull in writing asynchronus code in javascript
+
+    ther are major isuues also while using Callbacks
+    1. Callback Hell
+    2. Inversion of control
+*/
+
+// we know javascript is single threaded synchronus language. It won't wait for anything. it simply executes the code.
+
+console.log('hey Santosh')
+console.log('how are you doing')
+console.log('buddy..?')
+
+/*
+    it simply executes the three lines and we will get as
+
+    hey Santosh'
+    how are you doing
+    buddy..?
+*/
+
+// 1. CALLBACK
+
+
+// what if we want to wait for something lets say we want to execute 'how are you doing'  after 5 seconds. now here comes the use of callbacks
+
+// we will write a callback function and wrap it in the settimeout.
+
+console.log('hey Santosh')
+
+setTimeout(
+    function () {   // we wrote a callback function and we wrapped it in the setTimeout function. Now its the job of the setTimeout to execute the function after 5sec.
+        console.log('how are you doing')   
+    },5000
+)
+
+console.log('buddy..?')
+
+
+/*
+    the result will be like,
+    hey Santosh
+    buddy..?
+    how are you doing  -> this will print after 5sec
+ */
+
+
+// so using a callback we can achieve asynchoronus thing in javascript.
+
+/*
+    So we can have a piece of code in function and pass it as a callback which can be executed in later point of time.
+    By this way, using callback, we can achieve the asynchronus behaviour in javascript.
+    Asynchronus is nothing but waiting for something.
+*/
+
+/*
+    lwt say we have a E-commerce website, in it we create an order and proceed to payments.
+    lets say we have an access to the two  backend APIs. 
+    api.createOrder()
+    api.proceedToPayment()
+
+    In this case after we create order only we will be proceeding to the proceedToPayment. So in this case callback will be usefull.
+
+    we will keep api.proceedToPayment() in a function and we will call it in the api.createOrder()
+
+*/
+
+const cart = ['shoes', 'shirts', 'watches'];
+api.createOrder(cart, function () {
+    api.proceedToPayment()
+})
+
+/*
+    what this do is api.createOrder() will create the order first and then it is the responsibility of createOrder API to call the callback function
+*/
+
+
+/*
+    Now lets say after the proceedToPayment operation, we have to show the order summary.
+    lets say we have a api called api.showOrderSummary().
+    it is also dependendent on api.proceedToPayment(). beacause after payment done, we have to show the summary. So we can keep it in a function and make it as a callback function in the api.proceedToPayment()
+*/
+
+api.createOrder(cart, function () {
+    api.proceedToPayment(function () {
+        api.showOrderSummary()
+    })
+})
+
+/* now its the responsibility of the proceedToPayment API to complete the payment and call the function back so that we can execute  showOrderSummary api.
+    this is how we will manage the apis depending on each other.
+
+*/
+
+/*
+    We can observe a important issue in this process which is CALLBACK HELL
+    in large codebase, when apis are dependent on one after the other, we will be fall into this callback hell.
+
+    What is this CALLBACK HELL..?
+
+    it means one back inside another call it has another callbackinside and it contains another callback inside and it repeats.
+
+    This type of code is not managable and readable.
+*/
+
+
+
+// 2. INVERSION OF CONTROL
+
+/*
+    inversion of control means loosing control over our code.
+    let's see how it happens.
+*/
+
+api.createOrder(cart, function () {
+    api.proceedToPayment()
+})
+
+/*
+    whats happening in this code is, we are creating an order and we are passing the callback function to the createOrder api. we are simply believing that 
+    createOrderAPI will call back the function.
+    This is dangerous.
+
+    beacause we simply give the function callback and expecting createOrder api to call our function back.
+    what if createOrder api is in another server?, what if it don't call back the proceedToPayment api?, what if it has bugs in it?,
+    what if it calls the proceedToPayment function twice?
+
+    beacause we don't know what is happeing in the createOrder api.
+    we simply giving our function callback to the createOrder api. means we are giving our piece of code which is in the function to some other api. which is very Risky and not recommended.
+    
+    So, this is the isuue of Inversion of control.
+
+    we can get rid of it by using promises
 
 */
