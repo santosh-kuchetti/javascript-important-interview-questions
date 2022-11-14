@@ -29,6 +29,13 @@ test()
 
     all the functions declared in the program are hoisted to the top of the code. we can access it anywhere from the code.
 
+    and only named functions can be Hoisted to the top. but the anonymos functions that are given the reference to any variable can't be hoisted ans accessed before it's initialising
+
+    wel()                      this will give the error like we can't access the function before initialising
+    const wel = function(){
+        console.log('hey welcome)
+    }
+
     but the arrow functions won't be hoisted. this is very important.
 
 
